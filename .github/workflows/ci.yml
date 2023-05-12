@@ -465,7 +465,7 @@ jobs:
           composer-options: "${{ inputs.composer-options }}"
 
       - name: "Run checks with rector/rector"
-        run: "rector process --ansi --dry-run"
+        run: "vendor/bin/rector process --ansi --dry-run"
         continue-on-error: true
 
       - name: "Run checks with rector/rector"
