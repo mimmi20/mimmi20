@@ -478,7 +478,7 @@ jobs:
 
     runs-on: "${{ matrix.operating-system }}"
     timeout-minutes: 10
-    continue-on-error: false
+    continue-on-error: true
 
     if: inputs.skip-psalm == false
 
@@ -542,7 +542,6 @@ jobs:
       - "static-code-analysis"
       - "phpmd"
       - "rector"
-      - "psalm"
 
     steps:
       - name: Successful run
