@@ -509,7 +509,7 @@ jobs:
           extensions: "${{ env.PHP_EXTENSIONS }}"
           ini-values: "${{ env.PHP_INI_VALUES }}"
           coverage: "none"
-          tools: "${{ env.TOOLS }}, rector"
+          tools: "${{ env.TOOLS }}"
         env:
           fail-fast: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -521,7 +521,7 @@ jobs:
           dependency-versions: "highest"
           composer-options: "${{ inputs.composer-options }}"
 
-      - name: "Run checks with rector/rector"
+      - name: "Run checks with vimeo/psalm"
         run: "vendor/bin/psalm"
 
   # This is a meta job to avoid to have to constantly change the protection rules
