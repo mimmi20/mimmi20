@@ -37,7 +37,7 @@ on:
         required: true
 
 jobs:
-  validate:
+  validate-composer:
     name: "Validate composer"
 
     runs-on: "ubuntu-20.04"
@@ -76,10 +76,31 @@ jobs:
       - name: "Validate composer.json"
         run: "composer validate --strict"
 
+  validate-yaml:
+    name: "Validate composer"
+
+    runs-on: "ubuntu-20.04"
+    timeout-minutes: 10
+    continue-on-error: false
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v3"
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+          lfs: false
+          persist-credentials: false
+
+      - name: "Run yamllint"
+        uses: "actionshub/yamllint@main"
+
   install:
     name: "Install dependencies"
 
-    needs: "validate"
+    needs:
+      - "validate-composer"
+      - "validate-yaml"
 
     runs-on: "${{ matrix.operating-system }}"
     timeout-minutes: 10
@@ -534,7 +555,8 @@ jobs:
     if: always()
 
     needs:
-      - "validate"
+      - "validate-composer"
+      - "validate-yaml"
       - "install"
       - "php-lint"
       - "php-cs-fixer"
