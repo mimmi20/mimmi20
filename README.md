@@ -6,14 +6,14 @@
 
 <picture>
 <source 
-  srcset="https://github-readme-activity-graph.cyclic.app/graph?username=mimmi20&theme=github-dark"
+  srcset="https://github-readme-activity-graph.vercel.app/graph?username=mimmi20&theme=github-dark"
   media="(prefers-color-scheme: dark)"
 />
 <source
   srcset="https://github-readme-activity-graph.cyclic.app/graph?username=mimmi20&theme=github-light"
   media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
 />
-<img src="https://github-readme-activity-graph.cyclic.app/graph?username=mimmi20&theme=github-light" />
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=mimmi20&theme=github-light" />
 </picture>
 
 ### GitHub Statistcs:
