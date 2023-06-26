@@ -5,13 +5,16 @@ name: "Sync labels in the declarative way"
 on:
   push:
     branches:
-      - master
+      - "master"
+    paths:
+      - ".github/labels.yml"
+      - ".github/workflows/labels.yml"
 
 jobs:
   build:
     name: "Sync labels"
 
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-22.04"
 
     steps:
       - name: "Checkout"
@@ -22,9 +25,9 @@ jobs:
           lfs: false
           persist-credentials: false
 
-      - uses: "micnncim/action-label-syncer@v1.3.0"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
+      - uses: "crazy-max/ghaction-github-labeler@v4"
         with:
-          manifest: .github/labels.yml
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          yaml-file: .github/labels.yml
+          skip-delete: false
+          dry-run: false
