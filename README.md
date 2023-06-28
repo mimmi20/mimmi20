@@ -1,7 +1,7 @@
 # 👋 Hi, I’m @mimmi20
 
 <!--   GitHub stats graph -->
-
+<!--
 ### GitHub Activity Graph:
 
 <picture>
@@ -15,7 +15,7 @@
 />
 <img src="https://github-readme-activity-graph.vercel.app/graph?username=mimmi20&theme=github-light" />
 </picture>
-
+-->
 ### GitHub Statistcs:
 
 <picture>
