@@ -10,11 +10,17 @@ on:
       - ".github/labels.yml"
       - ".github/workflows/labels.yml"
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: "Sync labels"
 
-    runs-on: "ubuntu-22.04"
+    permissions:
+      issues: write
+
+    runs-on: ubuntu-latest
 
     steps:
       - name: "Checkout"
@@ -25,9 +31,9 @@ jobs:
           lfs: false
           persist-credentials: false
 
-      - uses: "crazy-max/ghaction-github-labeler@v4"
+      - uses: "micnncim/action-label-syncer@v1.3.0"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          yaml-file: .github/labels.yml
-          skip-delete: false
-          dry-run: false
+          manifest: .github/labels.yml
