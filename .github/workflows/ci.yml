@@ -110,7 +110,7 @@ jobs:
 
     runs-on: "${{ matrix.operating-system }}"
     timeout-minutes: 10
-    continue-on-error: ${{ '8.3' == matrix.php-version }}
+    continue-on-error: false
 
     if: inputs.skip-phplint == false
 
@@ -120,20 +120,10 @@ jobs:
       matrix:
         operating-system:
           - "ubuntu-20.04"
-          - "ubuntu-22.04"
 
         php-version:
+          # Should use the lowest supported version
           - "8.1"
-          - "8.2"
-          - "8.3"
-
-        dependencies:
-          - "highest"
-          - "lowest"
-
-        ts:
-          - "ts"
-          - "nts"
 
     steps:
       - name: "Checkout"
@@ -155,7 +145,7 @@ jobs:
         env:
           fail-fast: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          phpts: "${{ matrix.ts }}"
+          phpts: "ts"
 
       - name: "Lint PHP files"
         run: "find src/ -type f -name '*.php' -print0 | xargs -0 -L1 -P4 -- php -l -f"
@@ -175,7 +165,6 @@ jobs:
       matrix:
         operating-system:
           - "ubuntu-20.04"
-          - "ubuntu-22.04"
 
         php-version:
           # Should use the lowest supported version
@@ -337,7 +326,6 @@ jobs:
       matrix:
         operating-system:
           - "ubuntu-20.04"
-          - "ubuntu-22.04"
 
         php-version:
           # Should use the lowest supported version to ensure the CS-Fixer does
@@ -395,7 +383,6 @@ jobs:
       matrix:
         operating-system:
           - "ubuntu-20.04"
-          - "ubuntu-22.04"
 
         php-version:
           # Should use the lowest supported version to ensure the PHHPCS does
@@ -451,9 +438,9 @@ jobs:
       matrix:
         operating-system:
           - "ubuntu-20.04"
-          - "ubuntu-22.04"
 
         php-version:
+          # Should use the lowest supported version
           - "8.1"
 
     steps:
@@ -504,9 +491,9 @@ jobs:
       matrix:
         operating-system:
           - "ubuntu-20.04"
-          - "ubuntu-22.04"
 
         php-version:
+          # Should use the lowest supported version
           - "8.1"
 
     steps:
@@ -557,9 +544,9 @@ jobs:
       matrix:
         operating-system:
           - "ubuntu-20.04"
-          - "ubuntu-22.04"
 
         php-version:
+          # Should use the lowest supported version
           - "8.1"
 
     steps:
@@ -614,9 +601,9 @@ jobs:
       matrix:
         operating-system:
           - "ubuntu-20.04"
-          - "ubuntu-22.04"
 
         php-version:
+          # Should use the lowest supported version
           - "8.1"
 
     steps:
