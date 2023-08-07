@@ -30,8 +30,13 @@ on:
         required: true
         type: boolean
       skip-psalm:
-        required: true
+        required: false
         type: boolean
+        default: true
+      skip-composer-ununsed:
+        required: false
+        type: boolean
+        default: true
     secrets:
       envPAT:
         required: true
@@ -52,6 +57,7 @@ jobs:
           - "ubuntu-20.04"
 
         php-version:
+          # Should use the lowest supported version
           - "8.1"
 
     steps:
@@ -78,6 +84,53 @@ jobs:
 
       - name: "Validate composer.json"
         run: "composer validate --strict"
+
+  check-composer:
+    name: "Check composer dependencies"
+
+    runs-on: "${{ matrix.operating-system }}"
+    timeout-minutes: 10
+    continue-on-error: false
+
+    needs: "validate-composer"
+
+    if: inputs.skip-composer-ununsed == false
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        operating-system:
+          - "ubuntu-20.04"
+
+        php-version:
+          # Should use the lowest supported version
+          - "8.1"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v3"
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+          lfs: false
+          persist-credentials: false
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@2.25.1"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "none, phar, json, opcache, ${{ inputs.extensions }}"
+          ini-values: "${{ inputs.ini-values }}"
+          coverage: "none"
+          tools: "composer:v2, composer-unused"
+        env:
+          fail-fast: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          phpts: "nts"
+
+      - name: "Check composer.json"
+        run: "composer-unused validate --strict"
 
   validate-yaml:
     name: "Validate yaml"
@@ -212,6 +265,7 @@ jobs:
       - "validate-yaml"
       - "lint-php"
       - "php-lint-overtrue"
+      - "check-composer"
 
     steps:
       - name: Failing run
@@ -324,9 +378,7 @@ jobs:
           - "ubuntu-20.04"
 
         php-version:
-          # Should use the lowest supported version to ensure the CS-Fixer does
-          # not get confused and apply a rule that would break on lower supported
-          # versions.
+          # Should use the lowest supported version
           - "8.1"
 
     steps:
@@ -381,9 +433,7 @@ jobs:
           - "ubuntu-20.04"
 
         php-version:
-          # Should use the lowest supported version to ensure the PHHPCS does
-          # not get confused and apply a rule that would break on lower supported
-          # versions.
+          # Should use the lowest supported version
           - "8.1"
 
     steps:
