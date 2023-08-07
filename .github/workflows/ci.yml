@@ -85,53 +85,6 @@ jobs:
       - name: "Validate composer.json"
         run: "composer validate --strict"
 
-  check-composer:
-    name: "Check composer dependencies"
-
-    runs-on: "${{ matrix.operating-system }}"
-    timeout-minutes: 10
-    continue-on-error: false
-
-    needs: "validate-composer"
-
-    if: inputs.skip-composer-ununsed == false
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        operating-system:
-          - "ubuntu-20.04"
-
-        php-version:
-          # Should use the lowest supported version
-          - "8.1"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v3"
-        with:
-          # Disabling shallow clone is recommended for improving relevancy of reporting
-          fetch-depth: 0
-          lfs: false
-          persist-credentials: false
-
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.25.5"
-        with:
-          php-version: "${{ matrix.php-version }}"
-          extensions: "none, phar, json, opcache, ${{ inputs.extensions }}"
-          ini-values: "${{ inputs.ini-values }}"
-          coverage: "none"
-          tools: "composer:v2, composer-unused"
-        env:
-          fail-fast: true
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          phpts: "nts"
-
-      - name: "Check composer.json"
-        run: "composer-unused validate --strict"
-
   validate-yaml:
     name: "Validate yaml"
 
@@ -265,7 +218,6 @@ jobs:
       - "validate-yaml"
       - "lint-php"
       - "php-lint-overtrue"
-      - "check-composer"
 
     steps:
       - name: Failing run
@@ -340,6 +292,59 @@ jobs:
 
       - name: "Check dependencies with composer"
         run: "composer outdated --direct${{ inputs.composer-outdated-option }}"
+
+  check-composer:
+    name: "Check composer dependencies"
+
+    runs-on: "${{ matrix.operating-system }}"
+    timeout-minutes: 10
+    continue-on-error: false
+
+    needs: "install"
+
+    if: inputs.skip-composer-ununsed == false
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        operating-system:
+          - "ubuntu-20.04"
+
+        php-version:
+          # Should use the lowest supported version
+          - "8.1"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v3"
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+          lfs: false
+          persist-credentials: false
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@2.25.5"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "none, phar, json, opcache, ${{ inputs.extensions }}"
+          ini-values: "${{ inputs.ini-values }}"
+          coverage: "none"
+          tools: "composer:v2, composer-unused"
+        env:
+          fail-fast: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          phpts: "nts"
+
+      - name: "Update dependencies with composer"
+        uses: "ramsey/composer-install@2.2.0"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          composer-options: "--optimize-autoloader --prefer-dist --prefer-stable -v"
+
+      - name: "Check composer.json"
+        run: "composer-unused unused --ansi --no-progress --no-interaction --output-format=github composer.json"
 
   # This is a meta job to avoid to have to constantly change the protection rules
   # whenever we touch the matrix.
