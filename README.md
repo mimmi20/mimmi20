@@ -44,12 +44,12 @@
 
 <picture>
 <source 
-  srcset="https://streak-stats.demolab.com?user=mimmi20&theme=dark"
+  srcset="https://streak-stats.demolab.com?user=mimmi20&theme=dark&border_radius=15"
   media="(prefers-color-scheme: dark)"
 />
 <source
-  srcset="https://streak-stats.demolab.com/?user=mimmi20"
+  srcset="https://streak-stats.demolab.com/?user=mimmi20&border_radius=15"
   media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
 />
-<img src="https://streak-stats.demolab.com/?user=mimmi20" />
+<img src="https://streak-stats.demolab.com/?user=mimmi20&border_radius=15" />
 </picture>
